@@ -312,12 +312,12 @@ class ConferenceBot:
         self.application.add_handler(CallbackQueryHandler(self.button_callback))
         
         # Add periodic job to check for new conferences (every 12 hours)
-        job_queue = self.application.job_queue
-        job_queue.run_repeating(
-            self.check_new_conferences_job,
-            interval=timedelta(hours=12),
-            first=timedelta(seconds=10)
-        )
+        if self.application.job_queue:
+            self.application.job_queue.run_repeating(
+                self.check_new_conferences_job,
+                interval=timedelta(hours=12),
+                first=timedelta(seconds=10)
+            )
         
         # Start the bot
         logger.info("Starting bot...")
@@ -342,22 +342,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-    from telegram.ext import ApplicationBuilder, CommandHandler
-
-TOKEN = "your-telegram-bot-token"
-
-def my_callback(context):
-    # Example callback code
-    print("Job running!")
-
-app = ApplicationBuilder().token(TOKEN).build()
-
-# JobQueue is automatically available
-job_queue = app.job_queue
-
-# Run a repeating job every hour (3600 seconds)
-job_queue.run_repeating(my_callback, interval=3600)
-
-app.run_polling()
 
