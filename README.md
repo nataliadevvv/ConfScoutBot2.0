@@ -1,256 +1,327 @@
-# QA & IT Conference Discovery Telegram Bot 🤖
+# Conference Bot 🤖
 
-A Telegram bot that helps you discover QA and IT conferences across Europe and notifies you about new events with early bird ticket availability.
+A Telegram bot for tracking IT conferences with filtering by country and direction (Agile, DevOps, Testing, QA, Cloud, Security, etc.).
 
 ## Features ✨
 
-- 🔍 **Search Conferences**: Find upcoming QA and IT conferences across Europe
-- 🔔 **Smart Notifications**: Get notified when new conferences are added
-- 🎟️ **Early Bird Alerts**: Never miss early bird ticket opportunities
-- 📍 **Custom Filters**: Filter by country, topic, and date
-- 💾 **Conference Database**: Stores conference information locally
+- 🌍 **Country Filtering**: Filter conferences by country (USA, UK, Germany, Poland, etc.)
+- 🎯 **Direction Filtering**: Filter by conference topics (Agile, DevOps, Testing, Cloud, Security, AI/ML, etc.)
+- 🔔 **Smart Notifications**: Get notified about new conferences matching your interests
+- 📅 **Upcoming Conferences**: View all upcoming conferences matching your filters
+- 💾 **Persistent Preferences**: Your filters are saved automatically
 
-## Setup Instructions 🚀
+## Available Filters
 
-### 1. Create Your Telegram Bot
+### Countries 🌍
+- USA, UK, Germany, Poland, Netherlands, Spain, France, Italy
+- Canada, Australia
+- Online conferences
+- All Countries (no filter)
 
-1. Open Telegram and search for [@BotFather](https://t.me/botfather)
-2. Send `/newbot` command
-3. Choose a name for your bot (e.g., "Conference Finder")
-4. Choose a username (must end in 'bot', e.g., "qa_conference_finder_bot")
-5. BotFather will give you an API token - save this!
+### Directions 🎯
+- Agile
+- DevOps
+- Testing/QA
+- Cloud
+- Security
+- Data Science
+- AI/ML
+- Mobile Development
+- Web Development
+- Architecture
+- Management
+- All Directions (no filter)
 
-### 2. Install Python Dependencies
+## Local Deployment 🚀
+
+### Prerequisites
+
+- Python 3.9 or higher
+- Telegram Bot Token (get it from [@BotFather](https://t.me/botfather))
+
+### Step 1: Clone the Repository
 
 ```bash
-# Create a virtual environment (recommended)
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+git clone https://github.com/yourusername/conference-bot.git
+cd conference-bot
+```
 
-# Install dependencies
+### Step 2: Create Virtual Environment
+
+```bash
+# Create virtual environment
+python -m venv venv
+
+# Activate it
+# On Linux/Mac:
+source venv/bin/activate
+
+# On Windows:
+venv\Scripts\activate
+```
+
+### Step 3: Install Dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-### 3. Configure the Bot
-
-Set your Telegram bot token as an environment variable:
+### Step 4: Configure Environment Variables
 
 ```bash
-# Linux/Mac
-export TELEGRAM_BOT_TOKEN='your-token-from-botfather'
+# Copy the example file
+cp .env.example .env
 
-# Windows (Command Prompt)
-set TELEGRAM_BOT_TOKEN=your-token-from-botfather
-
-# Windows (PowerShell)
-$env:TELEGRAM_BOT_TOKEN='your-token-from-botfather'
+# Edit .env and add your bot token
+nano .env  # or use any text editor
 ```
 
-Or create a `.env` file:
-
+Add your token:
 ```
-TELEGRAM_BOT_TOKEN=your-token-from-botfather
+TELEGRAM_BOT_TOKEN=1234567890:ABCdefGHIjklMNOpqrsTUVwxyz
 ```
 
-### 4. Run the Bot
+### Step 5: Run the Bot
 
 ```bash
 python conference_bot.py
 ```
 
-The bot will start and you should see "Starting bot..." in the console.
-
-## Usage 📱
-
-### Available Commands
-
-- `/start` - Start the bot and see welcome message
-- `/search` - Search for QA/IT conferences
-- `/subscribe` - Enable notifications for new conferences
-- `/unsubscribe` - Disable notifications
-- `/upcoming` - View upcoming conferences (next 3 months)
-- `/filters` - Set your notification preferences
-- `/help` - Show help message
-
-### Example Workflow
-
-1. Start a chat with your bot on Telegram
-2. Send `/start` to initialize
-3. Send `/subscribe` to enable notifications
-4. Send `/search` to find conferences
-5. Use `/filters` to customize what you see
-6. Receive automatic notifications about new conferences!
-
-## How It Works 🔧
-
-### Architecture
-
+You should see:
 ```
-conference_bot.py          # Main bot logic
-├── ConferenceBot         # Core bot class
-├── Command Handlers      # /start, /search, /subscribe, etc.
-├── Callback Handlers     # Button interactions
-└── Background Jobs       # Periodic conference checks
-
-conferences.json          # Conference database
-users.json               # User subscriptions and preferences
+INFO - Starting Conference Bot...
+INFO - Application started
 ```
 
-### Data Storage
+## Running as a Service (Linux) 🔄
 
-The bot uses JSON files to store:
-- **conferences.json**: All discovered conferences with details
-- **users.json**: User subscriptions and filter preferences
+To keep the bot running 24/7 on Linux:
 
-### Notification System
-
-The bot runs a background job every 12 hours to:
-1. Search for new conferences online
-2. Compare with existing database
-3. Notify subscribed users about new findings
-4. Alert about upcoming early bird deadlines
-
-## Enhancing the Bot 🛠️
-
-### Adding Web Search Capability
-
-To enable real-time conference discovery, integrate web scraping:
-
-```python
-import requests
-from bs4 import BeautifulSoup
-
-def scrape_conferences():
-    """Scrape conferences from popular sites"""
-    sources = [
-        'https://confs.tech',
-        'https://conferenceindex.org',
-        # Add more sources
-    ]
-    # Implement scraping logic
-```
-
-### Adding More Data Sources
-
-Popular conference aggregators:
-- Confs.tech (has an API!)
-- Conferenceindex.org
-- 10times.com
-- Eventbrite API
-- Meetup API
-
-### Database Upgrade
-
-For production use, consider replacing JSON files with:
-- SQLite (built-in Python)
-- PostgreSQL (scalable)
-- MongoDB (flexible schema)
-
-## Deployment Options 🌐
-
-### Option 1: Run on Your Computer
-
-Simple for testing, but bot stops when computer is off.
-
-### Option 2: Deploy to a Server
-
-**Free Options:**
-- **Heroku** (with worker dyno)
-- **Railway.app**
-- **Render.com**
-- **PythonAnywhere**
-
-**Paid Options:**
-- AWS EC2
-- Google Cloud
-- DigitalOcean
-
-### Option 3: Serverless
-
-- AWS Lambda with scheduled triggers
-- Google Cloud Functions
-
-## Example Deployment (Heroku)
+### Create systemd service:
 
 ```bash
-# Install Heroku CLI
-# https://devcenter.heroku.com/articles/heroku-cli
-
-# Login to Heroku
-heroku login
-
-# Create app
-heroku create your-conference-bot
-
-# Set environment variable
-heroku config:set TELEGRAM_BOT_TOKEN='your-token'
-
-# Create Procfile
-echo "worker: python conference_bot.py" > Procfile
-
-# Deploy
-git init
-git add .
-git commit -m "Initial commit"
-git push heroku main
-
-# Start the worker
-heroku ps:scale worker=1
+sudo nano /etc/systemd/system/conference-bot.service
 ```
 
-## Troubleshooting 🔍
+Add this content:
 
-### Bot doesn't respond
-- Check if the bot is running (`python conference_bot.py`)
-- Verify your token is correct
-- Check console for error messages
+```ini
+[Unit]
+Description=Conference Telegram Bot
+After=network.target
 
-### No notifications
-- Ensure you've subscribed with `/subscribe`
-- Check that the background job is running
-- Verify conferences exist in the database
+[Service]
+Type=simple
+User=your_username
+WorkingDirectory=/path/to/conference-bot
+Environment="PATH=/path/to/conference-bot/venv/bin"
+ExecStart=/path/to/conference-bot/venv/bin/python conference_bot.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable and start:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable conference-bot
+sudo systemctl start conference-bot
+
+# Check status
+sudo systemctl status conference-bot
+
+# View logs
+journalctl -u conference-bot -f
+```
+
+## Running with Screen (Alternative) 📺
+
+```bash
+# Install screen
+sudo apt-get install screen  # Ubuntu/Debian
+# or
+sudo yum install screen      # CentOS/RHEL
+
+# Start a screen session
+screen -S conference-bot
+
+# Run the bot
+python conference_bot.py
+
+# Detach: Press Ctrl+A then D
+
+# Reattach later
+screen -r conference-bot
+
+# List all screens
+screen -ls
+```
+
+## Running on Windows 🪟
+
+### Method 1: Keep Terminal Open
+Simply run the bot and keep the terminal window open.
+
+### Method 2: Use pythonw (Hidden Window)
+```bash
+pythonw conference_bot.py
+```
+
+### Method 3: Create a Batch File
+Create `start_bot.bat`:
+```batch
+@echo off
+cd /d %~dp0
+call venv\Scripts\activate
+python conference_bot.py
+pause
+```
+
+## Bot Commands 📝
+
+- `/start` - Welcome message and introduction
+- `/filter` - Set your country and direction filters
+- `/list` - View conferences matching your filters
+- `/myfilters` - View your current filter settings
+- `/subscribe` - Enable notifications for new conferences
+- `/unsubscribe` - Disable notifications
+- `/help` - Show help message
+
+## Usage Example 💡
+
+1. Start the bot: `/start`
+2. Set filters: `/filter`
+   - Select countries: USA, UK, Poland
+   - Select directions: DevOps, Testing, Cloud
+3. View conferences: `/list`
+4. Enable notifications: `/subscribe`
+
+## Troubleshooting 🔧
+
+### "Conflict: terminated by other getUpdates request"
+
+This means you have multiple bot instances running:
+
+```bash
+# Find and kill all instances
+ps aux | grep conference_bot.py
+kill -9 <PID>
+
+# Or on Windows
+tasklist | findstr python
+taskkill /F /PID <PID>
+```
+
+### Bot not responding
+
+1. Check if bot is running: `ps aux | grep conference_bot.py`
+2. Check logs for errors
+3. Verify your bot token is correct
+4. Ensure you have internet connection
 
 ### Dependencies issues
-- Make sure Python 3.8+ is installed
-- Try reinstalling: `pip install -r requirements.txt --upgrade`
 
-## Future Enhancements 🚀
+```bash
+# Recreate virtual environment
+rm -rf venv
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+pip install -r requirements.txt
+```
 
-- [ ] Integration with conference APIs (Confs.tech, Eventbrite)
-- [ ] Calendar export (iCal format)
-- [ ] Price tracking for tickets
-- [ ] Conference reviews and ratings
-- [ ] Multi-language support
-- [ ] Speaking opportunity alerts
-- [ ] Hotel and travel recommendations
-- [ ] Early bird ticket countdown timer
+## Development 🛠️
+
+### Adding New Conferences
+
+Edit the `load_sample_conferences()` method in `conference_bot.py`:
+
+```python
+def load_sample_conferences(self):
+    self.conferences = [
+        Conference(
+            id="1",
+            name="Your Conference Name",
+            date="2026-03-15",
+            location="City Name",
+            country="Country",
+            directions=["agile", "testing"],  # lowercase
+            url="https://conference-url.com",
+            description="Description here"
+        ),
+        # Add more conferences...
+    ]
+```
+
+### Integrating with Conference APIs
+
+Replace `load_sample_conferences()` with your API/scraper:
+
+```python
+def fetch_conferences_from_api(self):
+    """Fetch conferences from external API"""
+    response = requests.get('https://api.example.com/conferences')
+    data = response.json()
+    
+    self.conferences = [
+        Conference(
+            id=conf['id'],
+            name=conf['name'],
+            date=conf['date'],
+            location=conf['location'],
+            country=conf['country'],
+            directions=conf['topics'],
+            url=conf['url']
+        )
+        for conf in data['conferences']
+    ]
+```
+
+## File Structure 📁
+
+```
+conference-bot/
+├── conference_bot.py          # Main bot file
+├── requirements.txt           # Python dependencies
+├── .env.example              # Environment variables template
+├── .env                      # Your actual config (not in git)
+├── .gitignore               # Git ignore rules
+├── user_preferences.json    # User data (auto-generated)
+├── venv/                    # Virtual environment
+└── README.md               # This file
+```
 
 ## Contributing 🤝
 
-Feel free to enhance the bot with:
-- More data sources
-- Better search algorithms
-- UI improvements
-- Additional notification options
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Commit changes: `git commit -am 'Add feature'`
+4. Push to branch: `git push origin feature-name`
+5. Submit a pull request
 
 ## License 📄
 
-This project is open source and available under the MIT License.
+MIT License - feel free to use and modify!
 
 ## Support 💬
 
-If you encounter issues:
-1. Check the console output for errors
-2. Verify your bot token
-3. Ensure all dependencies are installed
-4. Check Telegram API status
+If you have issues:
+1. Check the Troubleshooting section
+2. Open an issue on GitHub
+3. Contact [@YourTelegramHandle](https://t.me/yourhandle)
 
-## Acknowledgments 🙏
+## TODO 📋
 
-Built with:
-- [python-telegram-bot](https://github.com/python-telegram-bot/python-telegram-bot)
-- Conference data from community sources
+- [ ] Integrate with real conference APIs
+- [ ] Add web scraping for conference sites
+- [ ] Support more countries and directions
+- [ ] Add calendar export (.ics files)
+- [ ] Implement conference reminders
+- [ ] Add search functionality
+- [ ] Multi-language support
 
 ---
 
-Happy conference hunting! 🎉
+Made with ❤️ for the IT conference community
